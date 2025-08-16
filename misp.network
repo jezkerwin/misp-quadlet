@@ -1,0 +1,8 @@
+[Unit]
+Description=MISP Network Service
+
+[Network]
+NetworkName=misp
+
+[Install]
+WantedBy=default.target

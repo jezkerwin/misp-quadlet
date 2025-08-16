@@ -1,0 +1,25 @@
+[Unit]
+Description=Valkey (Redis-compatible) for MISP
+After=misp-network.service
+Requires=misp-network.service
+
+[Container]
+Image=docker.io/valkey/valkey:7.2
+ContainerName=misp-redis
+EnvironmentFile=%h/.config/containers/systemd/misp1/misp.env
+Pod=misp.pod
+Exec=--supervised no
+Exec=--requirepass ${REDIS_PASSWORD}
+
+HealthCmd=valkey-cli -a $REDIS_PASSWORD -p ${REDIS_PORT} ping
+HealthInterval=10s
+HealthTimeout=3s
+HealthRetries=10
+HealthStartPeriod=30s
+
+[Service]
+EnvironmentFile=%h/.config/containers/systemd/misp1/misp.env
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,33 @@
+[Unit]
+Description=MISP core
+Requires=misp-network.service db.service redis.service misp-modules.service
+After=misp-network.service db.service redis.service misp-modules.service
+
+
+[Container]
+Image=ghcr.io/misp/misp-docker/misp-core:latest
+ContainerName=misp-core
+EnvironmentFile=<path_to_misp.env>
+AddCapability=AUDIT_WRITE
+Pod=misp.pod
+
+Volume=%h/misp/configs:/var/www/MISP/app/Config:Z
+Volume=%h/misp/logs:/var/www/MISP/app/tmp/logs:Z
+Volume=%h/misp/files:/var/www/MISP/app/files:Z
+Volume=%h/misp/ssl:/etc/nginx/certs/:Z
+Volume=%h/misp/gnupg:/var/www/MISP/.gnupg/:Z
+
+HealthCmd=curl -ksf https://localhost/users/heartbeat >/dev/null
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=30
+HealthStartPeriod=30s 
+
+[Service]
+EnvironmentFile=<path_to_misp.env>
+Restart=always
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
+

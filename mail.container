@@ -1,0 +1,17 @@
+[Unit]
+Description=MISP SMTP Relay
+After=misp-network.service
+Requires=misp-network.service
+
+[Container]
+Image=docker.io/ixdotai/smtp
+ContainerName=misp-mail
+EnvironmentFile=<path_to_misp.env>
+Pod=misp.pod
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+

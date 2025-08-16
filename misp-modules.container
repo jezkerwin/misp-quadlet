@@ -1,0 +1,18 @@
+[Unit]
+Description=MISP Modules
+After=misp.network
+Requires=misp.network
+
+[Container]
+Image=ghcr.io/misp/misp-docker/misp-modules:latest
+ContainerName=misp-modules
+EnvironmentFile=<path_to_misp.env>
+Pod=misp.pod
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+
+

@@ -1,0 +1,8 @@
+[Unit]
+Description=Persistent MariaDB data volume for MISP
+
+[Volume]
+VolumeName=mysql_data
+
+[Install]
+WantedBy=default.target

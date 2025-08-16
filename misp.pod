@@ -1,0 +1,11 @@
+[Unit]
+Description=MISP Pod
+Wants=misp-network.service mysql_data-volume.service
+After=misp-network.service mysql_data-volume.service
+
+[Pod]
+PodName=misp
+
+PublishPort=10080:80
+PublishPort=10443:443
+Network=misp

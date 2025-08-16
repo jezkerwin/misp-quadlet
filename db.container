@@ -1,0 +1,34 @@
+[Unit]
+Description=MariaDB 10.11 for MISP
+Wants=misp-pod.service mysql_data-volume.service
+After=misp-pod.service mysql_data-volume.service
+
+[Container]
+Image=docker.io/mariadb:10.11
+ContainerName=misp-db
+EnvironmentFile=<path_to_misp.env>
+AddCapability=SYS_NICE
+Pod=misp.pod
+Volume=mysql_data:/var/lib/mysql:Z
+
+Exec=--innodb-buffer-pool-size=${INNODB_BUFFER_POOL_SIZE}
+Exec=--innodb-change-buffering=${INNODB_CHANGE_BUFFERING}
+Exec=--innodb-io-capacity=${INNODB_IO_CAPACITY}
+Exec=--innodb-io-capacity-max=${INNODB_IO_CAPACITY_MAX}
+Exec=--innodb-log-file-size=${INNODB_LOG_FILE_SIZE}
+Exec=--innodb-read-io-threads=${INNODB_READ_IO_THREADS}
+Exec=--innodb-stats-persistent=${INNODB_STATS_PERSISTENT}
+Exec=--innodb-write-io-threads=${INNODB_WRITE_IO_THREADS}
+
+HealthCmd=mariadb-admin --user=root --password="$MYSQL_ROOT_PASSWORD" --host=127.0.0.1 --silent ping
+HealthInterval=10s
+HealthTimeout=3s
+HealthRetries=10
+HealthStartPeriod=120s
+
+[Service]
+EnvironmentFile=<path_to_misp.env>
+Restart=always
+
+[Install]
+WantedBy=default.target
